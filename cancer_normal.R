@@ -17,18 +17,13 @@ library(SummarizedExperiment)
 # 1. DATA ACQUISITION
 # =============================================================================
 
-# Download TCGA Breast Cancer data
-query <- GDCquery(
-  project = "TCGA-BRCA",
-  data.category = "Transcriptome Profiling",
-  data.type = "Gene Expression Quantification",
-  workflow.type = "STAR - Counts",
-  sample.type = c("Primary Tumor", "Solid Tissue Normal")
+# Load from downloaded GDC files directory
+tcga_data <- GDCprepare(
+  query = NULL,  # No query needed if loading from local files
+  save = FALSE,
+  directory = "path/to/your/GDCdata/",  # Your local GDC download directory
+  summarizedExperiment = TRUE
 )
-
-# Download and prepare data
-GDCdownload(query, method = "api")
-tcga_data <- GDCprepare(query)
 
 # Extract count matrix and sample information
 count_matrix <- assay(tcga_data)
