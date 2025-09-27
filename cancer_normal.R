@@ -103,6 +103,40 @@ plotMA(res, alpha = 0.05, main = "MA Plot: Tumor vs Normal")
 # 3.3 Heatmap of top 50 genes
 # Get variance stabilized data
 vsd <- vst(dds, blind = FALSE)
+hvsd <- head(vsd)
+head(vsd)
+
+# Custom PCA with more control
+# Select more genes
+ntop <- 1000
+rv <- rowVars(assay(vsd))
+select <- order(rv, decreasing = TRUE)[seq_len(ntop)]
+
+# Perform PCA
+pca_data <- prcomp(t(assay(vsd)[select, ]), 
+                   center = TRUE,  # Center data
+                   scale. = FALSE) # Don't scale (VST already normalized)
+
+# Extract results
+pca_df <- data.frame(
+  PC1 = pca_data$x[,1],
+  PC2 = pca_data$x[,2],
+  PC3 = pca_data$x[,3],
+  condition = sample_info$condition,
+  sample = colnames(vsd)
+)
+
+# Calculate variance explained
+var_explained <- round(100 * pca_data$sdev^2 / sum(pca_data$sdev^2), 1)
+
+# Enhanced visualization
+
+ggplot(pca_df, aes(x = PC1, y = PC2, color = condition)) +
+  geom_point(size = 3, alpha = 0.7) +
+  xlab(paste0("PC1: ", var_explained[1], "% variance")) +
+  ylab(paste0("PC2: ", var_explained[2], "% variance")) +
+  theme_minimal() +
+  stat_ellipse(level = 0.95) # Add confidence ellipses
 
 # Select top 50 most variable genes
 top_genes <- order(rowVars(assay(vsd)), decreasing = TRUE)[1:50]
