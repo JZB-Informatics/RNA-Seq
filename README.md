@@ -1,2 +1,2 @@
 # RNA-Seq
-RNA-Seq Pipeline analysis on TCGA Breast Cancer Data set
+RNA-Seq analysis on TCGA Breast Cancer Data set
