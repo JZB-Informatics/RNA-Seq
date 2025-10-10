@@ -1,6 +1,6 @@
 # Comprehensive PPI Network Analysis Pipeline for TCGA-BRCA DEGs
 # Author: JahanZaib
-# Purpose: Protein-Protein Interaction network analysis of DEGs with survival integration
+# Purpose: Protein-Protein Interaction network analysis of DEGs with
 # Date: 2024
 
 # =============================================================================
@@ -98,7 +98,6 @@ setwd("PPI_Network_Analysis")
 # =============================================================================
 
 print("Connecting to STRING database...")
-options(timeout = 1000)
 # Initialize STRING database (Homo sapiens = 9606)
 string_db <- STRINGdb$new(
   version = "12",
@@ -126,7 +125,7 @@ write.csv(input_mapped, "STRING_gene_mapping.csv", row.names = FALSE)
 
 print("Retrieving protein-protein interactions...")
 # Get interactions for mapped genes
-options(timeout = 3000) # Sets the timeout to 300 seconds
+options(timeout = 300) # Sets the timeout to 300 seconds
 interactions <- string_db$get_interactions(input_mapped$STRING_id)
 
 print(paste("Total interactions retrieved:", nrow(interactions)))
@@ -142,7 +141,7 @@ interactions_annotated <- interactions %>%
 
 # Filter for high-confidence interactions
 high_conf_interactions <- interactions_annotated %>%
-  filter(combined_score >= 600)  # High confidence threshold
+  filter(combined_score >= 600)  # 700 for High confidence threshold
 
 print(paste("High-confidence interactions:", nrow(high_conf_interactions)))
 
@@ -506,7 +505,7 @@ visnet <- visNetwork(vis_nodes, vis_edges, width = "100%", height = "800px") %>%
 visSave(visnet, file = "PPI_network_interactive.html")
 
 # =============================================================================
-# 11. ADVANCED VISUALIZATIONS
+# 11. VISUALIZATIONS
 # =============================================================================
 
 # 11.1 Centrality heatmap
@@ -616,7 +615,7 @@ comm_size_plotly <- plot_ly(
 htmlwidgets::saveWidget(comm_size_plotly, "community_sizes_interactive.html")
 
 # =============================================================================
-# 12. INTEGRATE WITH SURVIVAL DATA (IF AVAILABLE)
+# 12. INTEGRATE WITH SURVIVAL DATA
 # =============================================================================
 
 if (has_survival) {
